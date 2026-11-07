@@ -1,0 +1,9 @@
+<div class="controls filter">
+  <label for="status">Track status</label>
+  <select #filter id="status" (change)="selectStatus(filter.value)">
+    <option value="" [selected]="!status()">All</option>
+    @for (option of statuses; track option) {
+      <option [value]="option" [selected]="status() === option">{{ option | titlecase }}</option>
+    }
+  </select>
+</div>

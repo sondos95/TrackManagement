@@ -1,0 +1,36 @@
+@let selectedStatus = status$ | async;
+<h1>Tracks</h1>
+<app-track-status-filter [status]="selectedStatus" (statusChange)="setFilter($event)" />
+@if (state$ | async; as state) {
+  @switch (state.kind) {
+    @case ('loading') { <p role="status">Loading tracks…</p> }
+    @case ('error') {
+      <p role="alert">Could not load tracks.</p>
+      <button type="button" (click)="retry.next()">Retry</button>
+    }
+    @case ('ready') {
+      @if (state.data.length) {
+        @let totalPages = pageCount(state.data.length);
+        @let page = visiblePage((requestedPage$ | async) ?? 1, totalPages);
+        @let offset = (page - 1) * pageSize;
+        <app-track-table [tracks]="state.data | slice:offset:offset + pageSize" [status]="selectedStatus" [page]="page" />
+        @if (totalPages > 1) {
+          <nav class="controls pagination" aria-label="Track pagination">
+            @if (page > 1) {
+              <a routerLink="/tracks" [queryParams]="{ status: selectedStatus, page: page > 2 ? page - 1 : null }">Previous</a>
+            }
+            <span role="status">Page {{ page }} of {{ totalPages }}</span>
+            @if (page < totalPages) {
+              <a routerLink="/tracks" [queryParams]="{ status: selectedStatus, page: page + 1 }">Next</a>
+            }
+          </nav>
+        }
+      } @else if (selectedStatus) {
+        <p role="status">No tracks match this status.</p>
+        <a routerLink="/tracks">Clear filter</a>
+      } @else {
+        <p role="status">No tracks are available.</p>
+      }
+    }
+  }
+}

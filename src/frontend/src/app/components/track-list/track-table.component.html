@@ -1,0 +1,19 @@
+<div class="table-scroll" role="region" aria-label="Track results" tabindex="0">
+  <table aria-label="Track results">
+    <thead><tr>
+      <th scope="col">Title</th><th scope="col">Artist</th>
+      <th scope="col">Genre</th><th scope="col">Status</th>
+    </tr></thead>
+    <tbody>
+      @for (track of tracks(); track track.id) {
+        <tr>
+          <td><a [routerLink]="['/tracks', track.id]"
+            [queryParams]="{ status: status(), page: page() > 1 ? page() : null }">{{ track.title }}</a></td>
+          <td>{{ track.artistName }}</td>
+          <td>{{ track.genre }}</td>
+          <td><span class="status">{{ track.status | titlecase }}</span></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
