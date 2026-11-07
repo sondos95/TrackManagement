@@ -20,7 +20,6 @@ public static class DependencyInjection
         });
         services.AddScoped<IArtistRepository, ArtistRepository>();
         services.AddScoped<ITrackRepository, TrackRepository>();
-        services.AddScoped<ITrackQueries, TrackQueries>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }

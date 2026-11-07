@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TrackManagement.Application.Features.Artists;
+using TrackManagement.Application.Features.Artists.DTOs.Responses;
 using TrackManagement.Application.Interfaces;
 using TrackManagement.Domain.Entities;
 using TrackManagement.Infrastructure.Persistence;
