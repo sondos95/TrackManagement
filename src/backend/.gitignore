@@ -1,0 +1,4 @@
+bin/
+obj/
+track-management.db
+track-management.db-*
