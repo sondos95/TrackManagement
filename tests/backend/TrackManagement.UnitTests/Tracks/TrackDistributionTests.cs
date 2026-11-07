@@ -1,21 +1,10 @@
 using TrackManagement.Domain.Entities;
-using TrackManagement.Domain.Enums;
 using Xunit;
 
 namespace TrackManagement.UnitTests.Tracks;
 
 public sealed class TrackDistributionTests
 {
-    [Fact]
-    public void NewDistributionStartsPending()
-    {
-        var submittedAt = new DateTimeOffset(2026, 5, 15, 12, 0, 0, TimeSpan.Zero);
-
-        var distribution = new TrackDistribution { TrackId = 1, DspId = 2, SubmittedAt = submittedAt };
-
-        Assert.Equal(DistributionStatus.Pending, distribution.Status);
-    }
-
     [Theory]
     [InlineData(2, 10)]
     [InlineData(-4, 16)]
@@ -23,9 +12,11 @@ public sealed class TrackDistributionTests
     {
         var submittedAt = new DateTimeOffset(2026, 5, 15, 12, 0, 0, TimeSpan.FromHours(offsetHours));
         var expectedUtc = new DateTimeOffset(2026, 5, 15, expectedUtcHour, 0, 0, TimeSpan.Zero);
+        var track = new Track("First Track", 1, "USABC2600001", new DateOnly(2026, 5, 15), "Jazz");
 
-        var distribution = new TrackDistribution { TrackId = 1, DspId = 2, SubmittedAt = submittedAt };
+        track.AssignToDsp(2, submittedAt);
 
+        var distribution = Assert.Single(track.Distributions);
         Assert.Equal(expectedUtc, distribution.SubmittedAt);
         Assert.Equal(TimeSpan.Zero, distribution.SubmittedAt.Offset);
     }
