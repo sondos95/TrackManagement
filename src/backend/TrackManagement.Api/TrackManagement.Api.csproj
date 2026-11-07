@@ -4,12 +4,15 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>TrackManagement.Api.Development</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="../TrackManagement.Application/TrackManagement.Application.csproj" />
     <ProjectReference Include="../TrackManagement.Infrastructure/TrackManagement.Infrastructure.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.2.1" />
   </ItemGroup>
 
 </Project>
