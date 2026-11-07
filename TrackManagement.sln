@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{C62E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackManagement.UnitTests", "tests\backend\TrackManagement.UnitTests\TrackManagement.UnitTests.csproj", "{A9052964-0893-43DD-A7F4-C6C46F9328C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackManagement.IntegrationTests", "tests\backend\TrackManagement.IntegrationTests\TrackManagement.IntegrationTests.csproj", "{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,18 @@ Global
 		{A9052964-0893-43DD-A7F4-C6C46F9328C6}.Release|x64.Build.0 = Release|Any CPU
 		{A9052964-0893-43DD-A7F4-C6C46F9328C6}.Release|x86.ActiveCfg = Release|Any CPU
 		{A9052964-0893-43DD-A7F4-C6C46F9328C6}.Release|x86.Build.0 = Release|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Debug|x64.Build.0 = Debug|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Debug|x86.Build.0 = Debug|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Release|x64.Build.0 = Release|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,5 +117,6 @@ Global
 		{90EBD301-D256-4B6E-AFD0-3DA97FDB67BF} = {FE360695-3F2B-1049-3887-35FBB5135923}
 		{C62EED4C-2AC9-F50F-E0BC-649CFEA98BDB} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 		{A9052964-0893-43DD-A7F4-C6C46F9328C6} = {C62EED4C-2AC9-F50F-E0BC-649CFEA98BDB}
+		{FC4D74F0-F55E-41E1-93CF-1B6D70FF6067} = {C62EED4C-2AC9-F50F-E0BC-649CFEA98BDB}
 	EndGlobalSection
 EndGlobal
