@@ -1,0 +1,16 @@
+<div class="table-scroll" role="region" aria-label="DSP assignments" tabindex="0">
+  <table aria-label="DSP assignments">
+    <thead><tr>
+      <th scope="col">Provider</th><th scope="col">Submitted (UTC)</th><th scope="col">Delivery status</th>
+    </tr></thead>
+    <tbody>
+      @for (assignment of assignments(); track assignment.dspId) {
+        <tr>
+          <td>{{ assignment.dspName }}</td>
+          <td><time [attr.datetime]="assignment.submittedAt">{{ assignment.submittedAt | date:'medium':'UTC' }}</time></td>
+          <td><span class="status">{{ assignment.status | titlecase }}</span></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

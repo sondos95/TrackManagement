@@ -1,0 +1,34 @@
+<a routerLink="/tracks" queryParamsHandling="preserve">Back to tracks</a>
+@if (state$ | async; as state) {
+  @switch (state.kind) {
+    @case ('loading') {
+      <h1>Track detail</h1>
+      <p role="status">Loading track…</p>
+    }
+    @case ('error') {
+      <h1>Track detail</h1>
+      @if (state.status === 404) {
+        <p role="alert">Track not found.</p>
+      } @else {
+        <p role="alert">Could not load this track.</p>
+        <button type="button" (click)="retry.next()">Retry</button>
+      }
+    }
+    @case ('ready') {
+      <h1>{{ state.data.title }}</h1>
+      <dl class="metadata">
+        <div><dt>Artist</dt><dd>{{ state.data.artistName }}</dd></div>
+        <div><dt>ISRC</dt><dd>{{ state.data.isrc }}</dd></div>
+        <div><dt>Genre</dt><dd>{{ state.data.genre }}</dd></div>
+        <div><dt>Release date</dt><dd>{{ state.data.releaseDate | date:'mediumDate' }}</dd></div>
+        <div><dt>Track status</dt><dd>{{ state.data.status | titlecase }}</dd></div>
+      </dl>
+      <h2>DSP assignments</h2>
+      @if (state.data.assignments.length) {
+        <app-dsp-distribution-table [assignments]="state.data.assignments" />
+      } @else {
+        <p>No DSP assignments yet.</p>
+      }
+    }
+  }
+}
