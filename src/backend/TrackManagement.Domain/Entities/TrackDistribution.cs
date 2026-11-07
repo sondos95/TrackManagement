@@ -4,16 +4,17 @@ namespace TrackManagement.Domain.Entities;
 
 public sealed class TrackDistribution
 {
-    private DateTimeOffset _submittedAt;
-
-    public int Id { get; set; }
-    public int TrackId { get; set; }
-    public int DspId { get; set; }
-    public required DateTimeOffset SubmittedAt
+    internal TrackDistribution(int dspId, DateTimeOffset submittedAt)
     {
-        get => _submittedAt;
-        set => _submittedAt = value.ToUniversalTime();
+        DspId = dspId;
+        SubmittedAt = submittedAt.ToUniversalTime();
     }
 
-    public DistributionStatus Status { get; set; } = DistributionStatus.Pending;
+    public int Id { get; private set; }
+    public int TrackId { get; private set; }
+    public int DspId { get; private set; }
+    public DateTimeOffset SubmittedAt { get; private set; }
+    public DistributionStatus Status { get; private set; } = DistributionStatus.Pending;
+
+    internal void SetStatus(DistributionStatus status) => Status = status;
 }
