@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi;
+using TrackManagement.Api.Auth;
 using TrackManagement.Application.Features.Artists.Commands;
 using TrackManagement.Infrastructure;
 
@@ -24,14 +25,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     options.TokenValidationParameters.ValidateLifetime = true;
     options.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
 });
+var standardSession = new AuthorizationPolicyBuilder().RequireAuthenticatedUser()
+    .RequireAssertion(context => !context.User.HasClaim(DemoTokens.PermissionClaim, DemoTokens.ReadOnly))
+    .Build();
 builder.Services.AddAuthorizationBuilder()
-    .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+    .SetDefaultPolicy(standardSession)
+    .SetFallbackPolicy(standardSession)
+    .AddPolicy(DemoTokens.ReadPolicy, policy => policy.RequireAuthenticatedUser());
 
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining<CreateArtistCommand>());
 
+DemoTokens? demoTokens = null;
 if (builder.Environment.IsDevelopment())
 {
+    demoTokens = new DemoTokens();
+    builder.Services.PostConfigure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, demoTokens.AddValidationKey);
     builder.Services.AddOpenApi(options =>
     {
         options.AddDocumentTransformer((document, _, _) =>
@@ -101,6 +110,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "Track Management API"));
     app.MapOpenApi().AllowAnonymous();
+    app.MapPost("/api/auth/demo-token", demoTokens!.Issue).AllowAnonymous();
 }
 
 app.UseAuthentication();

@@ -90,6 +90,51 @@ public sealed class TrackApiTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task DemoTokenCanReadTracksAndCannotWrite()
+    {
+        _client.DefaultRequestHeaders.Authorization = new("Bearer", CreateToken());
+        var id = await CreateTrackAsync(_artist, "USABC2600010", "Jazz");
+        _client.DefaultRequestHeaders.Authorization = null;
+
+        using var demoRequest = new HttpRequestMessage(HttpMethod.Post, "/api/auth/demo-token");
+        demoRequest.Headers.Add("Origin", "http://localhost:4200");
+        using var issuance = await _client.SendAsync(demoRequest);
+        Assert.Equal(HttpStatusCode.OK, issuance.StatusCode);
+        Assert.Equal("http://localhost:4200", Assert.Single(issuance.Headers.GetValues("Access-Control-Allow-Origin")));
+        Assert.True(issuance.Headers.CacheControl?.NoStore);
+        var body = await issuance.Content.ReadFromJsonAsync<JsonElement>();
+        _client.DefaultRequestHeaders.Authorization = new("Bearer", body.GetProperty("accessToken").GetString());
+
+        using var list = await _client.GetAsync("/api/tracks");
+        using var detail = await _client.GetAsync($"/api/tracks/{id}");
+        Assert.Equal(HttpStatusCode.OK, list.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, detail.StatusCode);
+
+        foreach (var (method, path) in new[]
+        {
+            (HttpMethod.Post, "/api/artists"),
+            (HttpMethod.Post, "/api/tracks"),
+            (HttpMethod.Post, $"/api/tracks/{id}/distribute"),
+            (HttpMethod.Patch, $"/api/tracks/{id}/status")
+        })
+        {
+            using var request = new HttpRequestMessage(method, path);
+            using var response = await _client.SendAsync(request);
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+    }
+
+    [Fact]
+    public async Task DemoTokenEndpointIsNotRegisteredInProduction()
+    {
+        using var production = _factory.WithWebHostBuilder(builder => builder.UseEnvironment("Production"));
+        using var client = production.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new("Bearer", CreateToken());
+        using var response = await client.PostAsync("/api/auth/demo-token", null);
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
     public async Task SwaggerIsPublicInDevelopmentAndDescribesProtectedOperations()
     {
         using var ui = await _client.GetAsync("/swagger/index.html");

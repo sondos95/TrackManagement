@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TrackManagement.Api.Auth;
 using TrackManagement.Api.DTOs.Requests;
 using TrackManagement.Application.Features.Tracks;
 using TrackManagement.Application.Features.Tracks.Commands;
@@ -11,11 +12,11 @@ using TrackManagement.Domain.Enums;
 namespace TrackManagement.Api.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("api/tracks")]
 public sealed class TrackController(ISender sender) : ControllerBase
 {
     [HttpPost]
+    [Authorize]
     [ProducesResponseType<CreatedTrack>(StatusCodes.Status201Created)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
@@ -31,6 +32,7 @@ public sealed class TrackController(ISender sender) : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = DemoTokens.ReadPolicy)]
     [ProducesResponseType<IReadOnlyList<TrackSummary>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IReadOnlyList<TrackSummary>>> List(
@@ -54,6 +56,7 @@ public sealed class TrackController(ISender sender) : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Policy = DemoTokens.ReadPolicy)]
     [ProducesResponseType<TrackDetails>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
@@ -61,6 +64,7 @@ public sealed class TrackController(ISender sender) : ControllerBase
         Map(await sender.Send(new GetTrackDetailsQuery(id), cancellationToken));
 
     [HttpPost("{id}/distribute")]
+    [Authorize]
     [ProducesResponseType<TrackDetails>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
@@ -70,6 +74,7 @@ public sealed class TrackController(ISender sender) : ControllerBase
         Map(await sender.Send(new DistributeTrackCommand(id, request.DspIds), cancellationToken));
 
     [HttpPatch("{id}/status")]
+    [Authorize]
     [ProducesResponseType<TrackStatusResponse>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
