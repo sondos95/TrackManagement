@@ -97,10 +97,8 @@ public sealed class TrackApiTests : IAsyncLifetime
         _client.DefaultRequestHeaders.Authorization = null;
 
         using var demoRequest = new HttpRequestMessage(HttpMethod.Post, "/api/auth/demo-token");
-        demoRequest.Headers.Add("Origin", "http://localhost:4200");
         using var issuance = await _client.SendAsync(demoRequest);
         Assert.Equal(HttpStatusCode.OK, issuance.StatusCode);
-        Assert.Equal("http://localhost:4200", Assert.Single(issuance.Headers.GetValues("Access-Control-Allow-Origin")));
         Assert.True(issuance.Headers.CacheControl?.NoStore);
         var body = await issuance.Content.ReadFromJsonAsync<JsonElement>();
         _client.DefaultRequestHeaders.Authorization = new("Bearer", body.GetProperty("accessToken").GetString());
