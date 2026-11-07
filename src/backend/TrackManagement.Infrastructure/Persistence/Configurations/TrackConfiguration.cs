@@ -10,21 +10,31 @@ internal sealed class TrackConfiguration : IEntityTypeConfiguration<Track>
     {
         builder.HasKey(track => track.Id);
         builder.Property(track => track.Title).IsRequired().HasMaxLength(200);
+        builder.Property(track => track.ArtistId).IsRequired();
         builder.Property(track => track.Isrc).IsRequired().HasMaxLength(12);
         builder.Property(track => track.ReleaseDate).IsRequired();
         builder.Property(track => track.Genre).IsRequired().HasMaxLength(100);
         builder.Property(track => track.Status).HasConversion<string>().IsRequired().HasMaxLength(16);
+        builder.Property(track => track.Revision).IsConcurrencyToken();
 
         builder.Property<string>("NormalizedIsrc")
             .HasComputedColumnSql("upper(trim(\"Isrc\"))", stored: true)
             .IsRequired()
             .HasMaxLength(12);
         builder.HasIndex("NormalizedIsrc").IsUnique();
-
         builder.HasOne<Artist>()
             .WithMany(artist => artist.Tracks)
             .HasForeignKey(track => track.ArtistId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(track => track.Distributions)
+            .WithOne()
+            .HasForeignKey(distribution => distribution.TrackId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
+        builder.Navigation(track => track.Distributions)
+            .HasField("_distributions")
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }
