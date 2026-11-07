@@ -1,0 +1,17 @@
+<section class="demo-home" [attr.aria-busy]="loading()">
+  <img src="assets/branding/takwene-logo.png" alt="Takwene" width="198" height="65" fetchpriority="high">
+  <h1>Track Management</h1>
+  <p>Browse the demo catalog and check how tracks are delivered to music platforms.</p>
+  @if (expired) {
+    <p role="status">Your session ended. Start a new demo to continue.</p>
+  }
+  @if (loading()) {
+    <p role="status">Starting your Takwene demo session…</p>
+  }
+  @if (failed()) {
+    <p role="alert">Could not start the demo. Check that the development API is running and try again.</p>
+  }
+  <button type="button" [disabled]="loading()" (click)="startDemo()">
+    {{ failed() ? 'Try again' : 'Start demo' }}
+  </button>
+</section>
